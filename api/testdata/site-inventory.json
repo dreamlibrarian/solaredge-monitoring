@@ -1,0 +1,19 @@
+{
+  "Inventory": {
+    "meters": [],
+    "sensors": [],
+    "gateways": [],
+    "batteries": [],
+    "inverters": [
+      {
+        "name": "Inverter 1",
+        "manufacturer": "SolarEdge",
+        "model": "SE6000H-US000BNU4",
+        "communicationMethod": "WIFI",
+        "cpuVersion": "4.14.109",
+        "SN": "730CFD51-CD",
+        "connectedOptimizers": 17
+      }
+    ]
+  }
+}

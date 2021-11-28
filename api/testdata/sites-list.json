@@ -1,0 +1,44 @@
+{
+  "sites": {
+    "count": 1,
+    "site": [
+      {
+        "id": 1234567,
+        "name": "Bobson, Robert",
+        "accountId": 12345,
+        "status": "Active",
+        "peakPower": 5.44,
+        "lastUpdateTime": "2021-11-26",
+        "installationDate": "2021-08-19",
+        "ptoDate": null,
+        "notes": "",
+        "type": "Optimizers & Inverters",
+        "location": {
+          "country": "United States",
+          "state": "California",
+          "city": "Sacramento",
+          "address": "1 Main Street",
+          "address2": "",
+          "zip": "99999",
+          "timeZone": "America/Los_Angeles",
+          "countryCode": "US",
+          "stateCode": "CA"
+        },
+        "primaryModule": {
+          "manufacturerName": "LG",
+          "modelName": "LG380N1C-A6",
+          "maximumPower": 380,
+          "temperatureCoef": -0.34
+        },
+        "uris": {
+          "DETAILS": "/site/1235567/details",
+          "DATA_PERIOD": "/site/1234567/dataPeriod",
+          "OVERVIEW": "/site/1234567/overview"
+        },
+        "publicSettings": {
+          "isPublic": false
+        }
+      }
+    ]
+  }
+}

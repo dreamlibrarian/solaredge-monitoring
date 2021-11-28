@@ -1,0 +1,62 @@
+{
+  "Inventory":{
+    "meters":[
+      {
+        "name":"Production Meter",
+        "manufacturer":"WattNode",
+        "model":"WNC-3Y-480-MB",
+        "firmwareVersion":"0013",
+        "connectedSolaredgeDeviceSN":"12345678-00",
+        "type":"Production",
+        "form":"physical"
+      }],
+    "sensors":[
+      {
+        "connectedSolaredgeDeviceSN":"12345678-00",
+        "id":"SensorDirectIrradiance",
+        "connectedTo":"Gateway 1",
+        "category":"IRRADIANCE",
+        "type":"Direct irradiance"
+      },
+      {
+        "connectedSolaredgeDeviceSN":"12345678-00",
+        "id":"SensorPlaneOfArrayIrradiance",
+        "connectedTo":"Gateway 1",
+        "category":"IRRADIANCE",
+        "type":"Plane of array irradiance"
+      }],
+    "gateways":[
+      {
+        "name":"Gateway 1",
+        "firmwareVersion":"2.956.0",
+        "SN":"12345678-00"
+      }],
+    "batteries":[
+      {
+        "name":"Battery 1.1",
+        "manufacturer":"NAME",
+        "model":"10KWh",
+        "firmwareVersion":"2.0",
+        "connectedInverterSn":"12345678-01",
+        "nameplateCapacity":6400.0,
+        "SN":"T123456789"
+      }],
+    "inverters":[
+      {
+        "name":"Inverter 1",
+        "manufacturer":"SolarEdge",
+        "model":"SE20K",
+        "firmwareVersion":"2.19.233",
+        "SN":"12345678-01",
+        "connectedOptimizers":76
+      },
+      {
+        "name":"Inverter 2",
+        "manufacturer":"SolarEdge",
+        "model":"SE20K",
+        "firmwareVersion":"2.19.233",
+        "SN":"12345678-02",
+        "connectedOptimizers":76
+      }]
+  }
+}
