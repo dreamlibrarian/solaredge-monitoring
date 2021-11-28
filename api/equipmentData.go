@@ -44,6 +44,9 @@ func (t *Telemetry) UnmarshalJSON(data []byte) error {
 	*t = Telemetry(interimTelemetry.TelemetryAlias)
 
 	t.Date, err = parseTime(interimTelemetry.Date)
+	if err != nil {
+		return fmt.Errorf("unable to parse date %s to time.Time: %w", interimTelemetry.Date, err)
+	}
 
 	return nil
 }

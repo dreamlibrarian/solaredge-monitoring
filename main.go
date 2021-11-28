@@ -9,9 +9,9 @@ import (
 
 func main() {
 
-	api_key := os.Getenv("APIKEY")
+	apiKey := os.Getenv("APIKEY")
 
-	c := client.NewClient(api_key)
+	c := client.NewClient(apiKey)
 
 	list, err := c.GetSiteList()
 	if err != nil {

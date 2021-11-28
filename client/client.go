@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"reflect"
 
 	"github.com/rs/zerolog/log"
 )
@@ -38,7 +39,13 @@ func NewClient(key string) *Client {
 	return client
 }
 
+// handleResponse parses the response into the output object and returns an error if non-200.
+// Will also handle a nil output object if you just want to check for status.
 func handleResponse(response *http.Response, out interface{}) error {
+
+	if out != nil && reflect.ValueOf(out).Kind() != reflect.Ptr {
+		return fmt.Errorf("handleResponse called with non-pointer output object of type %t, needs pointer", out)
+	}
 	if response.StatusCode == 404 {
 		return errors.New("no document found at endpoint")
 	}
@@ -60,15 +67,22 @@ func handleResponse(response *http.Response, out interface{}) error {
 	}
 
 	log.Debug().Str("response body", string(respBody)).Msg("Response Body")
-	err = json.Unmarshal(respBody, out)
-	if err != nil {
-		return fmt.Errorf("error unmarshalling response to %t: %w", out, err)
+	if out != nil {
+		err = json.Unmarshal(respBody, &out)
+		if err != nil {
+			return fmt.Errorf("error unmarshalling response to %t: %w", out, err)
+		}
 	}
-
 	return nil
 }
 
+func (c *Client) do(handlerFunc func(string) (*http.Response, error), req Request) (*http.Response, error) {
+	return handlerFunc(req.String())
+}
+
+// AuthenticatingRoundTripper injects the credential into the query parameter for all requests.
 // FIXME: My happy place would be a good httpclient middleware framework, not a handjam like this.
+// FIXME: When we have a nice happy place, let's get a RetryRoundTripper in here too.
 type AuthenticatingRoundTripper struct {
 	transport http.RoundTripper
 	key       string
