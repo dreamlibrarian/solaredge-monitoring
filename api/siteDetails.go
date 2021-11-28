@@ -12,17 +12,17 @@ type SiteDetailsDocument struct {
 
 type SiteListDocument struct {
 	Sites struct {
-		Count int64 `json:"count"`
+		Count int64         `json:"count"`
 		Sites []SiteDetails `json:"site"`
 	}
 }
 
 type SiteDetails struct {
-	ID               int64            `json:"id"`
+	ID               int64             `json:"id"`
 	Name             string            `json:"name"`
-	AccountID        int64            `json:"accountId"`
+	AccountID        int64             `json:"accountId"`
 	Status           string            `json:"status"`
-	PeakPower        float64            `json:"peakPower"`
+	PeakPower        float64           `json:"peakPower"`
 	LastUpdateTime   *time.Time        `json:"lastUpdateTime"`
 	InstallationDate *time.Time        `json:"installationDate"`
 	PTODate          *time.Time        `json:"ptoDate"`
@@ -88,7 +88,7 @@ type Location struct {
 type PrimaryModule struct {
 	ManufacturerName       string  `json:"manufacturerName"`
 	ModelName              string  `json:"modelName"`
-	MaximumPower           int64   `json:"maximumPower"`
+	MaximumPower           float64 `json:"maximumPower"`
 	TemperatureCoefficient float64 `json:"temperatureCoef"`
 }
 

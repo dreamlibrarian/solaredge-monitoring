@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-type EquipmentDataDocument struct{
+type EquipmentDataDocument struct {
 	Data EquipmentData `json:"data"`
 }
 
@@ -17,15 +17,15 @@ type EquipmentData struct {
 
 type Telemetry struct {
 	Date                  *time.Time `json:"date"`
-	TotalActivePower      float64   `json:"totalActivePower"`
-	DCVoltage             float64   `json:"dcVoltage"`
-	GroundFaultResistance int64     `json:"groundFaultResistance"`
-	PowerLimit            int64     `json:"powerLimit"`
-	TotalEnergy           int64     `json:"totalEnergy"`
-	Temperature           float64   `json:"temperature"`
-	InverterMode          string    `json:"inverterMode"`
-	OperationMode         int64     `json:"operationMode"`
-	L1Data                L1Data    `json:"L1Data"`
+	TotalActivePower      float64    `json:"totalActivePower"`
+	DCVoltage             float64    `json:"dcVoltage"`
+	GroundFaultResistance int64      `json:"groundFaultResistance"`
+	PowerLimit            int64      `json:"powerLimit"`
+	TotalEnergy           int64      `json:"totalEnergy"`
+	Temperature           float64    `json:"temperature"`
+	InverterMode          string     `json:"inverterMode"`
+	OperationMode         int64      `json:"operationMode"`
+	L1Data                L1Data     `json:"L1Data"`
 }
 
 func (t *Telemetry) UnmarshalJSON(data []byte) error {
