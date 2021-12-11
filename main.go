@@ -1,24 +1,15 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
-	"github.com/dreamlibrarian/solaredge-monitoring/client"
+	"github.com/dreamlibrarian/solaredge-monitoring/cmd"
 )
 
 func main() {
-
-	apiKey := os.Getenv("APIKEY")
-
-	c := client.NewClient(apiKey)
-
-	list, err := c.GetSiteList()
+	err := cmd.RootCmd.Execute()
 	if err != nil {
-		fmt.Printf("Couldn't list sites: %s", err)
 		os.Exit(1)
+		return
 	}
-
-	fmt.Printf("%+v", list)
-
 }

@@ -24,6 +24,8 @@ func (c *Client) CreateRequest(path string) Request {
 	req.urlObject = c.baseURL
 	req.urlObject.Path = path
 
+	req.query = make(url.Values)
+
 	return req
 }
 

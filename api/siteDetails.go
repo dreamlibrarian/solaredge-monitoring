@@ -52,21 +52,21 @@ func (s *SiteDetails) UnmarshalJSON(data []byte) error {
 	if interimData.LastUpdateTime != nil {
 		s.LastUpdateTime, err = parseDate(*interimData.LastUpdateTime)
 		if err != nil {
-			return fmt.Errorf("unable to parse lastUpdateTime %s with format %s: %w", *interimData.LastUpdateTime, timeFormat, err)
+			return fmt.Errorf("unable to parse lastUpdateTime %s with format %s: %w", *interimData.LastUpdateTime, TimeFormat, err)
 		}
 	}
 
 	if interimData.InstallationDate != nil {
 		s.InstallationDate, err = parseDate(*interimData.InstallationDate)
 		if err != nil {
-			return fmt.Errorf("unable to parse installationDate %s with format %s: %w", *interimData.InstallationDate, timeFormat, err)
+			return fmt.Errorf("unable to parse installationDate %s with format %s: %w", *interimData.InstallationDate, TimeFormat, err)
 		}
 	}
 
 	if interimData.PTODate != nil {
 		s.PTODate, err = parseTime(*interimData.PTODate)
 		if err != nil {
-			return fmt.Errorf("unable to parse PTODate %s with format %s: %w", *interimData.PTODate, timeFormat, err)
+			return fmt.Errorf("unable to parse PTODate %s with format %s: %w", *interimData.PTODate, TimeFormat, err)
 		}
 	}
 

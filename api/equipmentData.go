@@ -19,12 +19,12 @@ type Telemetry struct {
 	Date                  *time.Time `json:"date"`
 	TotalActivePower      float64    `json:"totalActivePower"`
 	DCVoltage             float64    `json:"dcVoltage"`
-	GroundFaultResistance int64      `json:"groundFaultResistance"`
-	PowerLimit            int64      `json:"powerLimit"`
-	TotalEnergy           int64      `json:"totalEnergy"`
+	GroundFaultResistance float64    `json:"groundFaultResistance"`
+	PowerLimit            float64    `json:"powerLimit"`
+	TotalEnergy           float64    `json:"totalEnergy"`
 	Temperature           float64    `json:"temperature"`
 	InverterMode          string     `json:"inverterMode"`
-	OperationMode         int64      `json:"operationMode"`
+	OperationMode         float64    `json:"operationMode"`
 	L1Data                L1Data     `json:"L1Data"`
 }
 
@@ -58,5 +58,5 @@ type L1Data struct {
 	ApparentPower float64 `json:"apparentPower"`
 	ActivePower   float64 `json:"activePower"`
 	ReactivePower float64 `json:"reactivePower"`
-	CosPhi        int64   `json:"cosPhi"`
+	CosPhi        float64 `json:"cosPhi"`
 }

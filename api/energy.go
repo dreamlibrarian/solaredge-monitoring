@@ -32,7 +32,7 @@ func (v *Value) UnmarshalJSON(data []byte) error {
 
 	timeStamp, err := parseTime(interimData.Date)
 	if err != nil {
-		return fmt.Errorf("unable to parse %s as date format %s: %w", interimData.Date, dateFormat, err)
+		return fmt.Errorf("unable to parse %s as date format %s: %w", interimData.Date, DateFormat, err)
 	}
 
 	*v = Value{Date: *timeStamp, Value: interimData.Value}

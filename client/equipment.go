@@ -13,14 +13,15 @@ const (
 
 func (c *Client) GetSiteInventory(siteID string) (*api.Inventory, error) {
 
-	result := &api.Inventory{}
+	result := &api.InventoryDocument{}
 
-	req := c.CreateRequestf(siteInventoryEndpointTemplate, siteListEndpoint)
+	req := c.CreateRequestf(siteInventoryEndpointTemplate, siteID)
 
 	resp, err := c.do(c.client.Get, req)
 	if err != nil {
 		return nil, fmt.Errorf("unable to get site inventory: %w", err)
 	}
 
-	return result, handleResponse(resp, result)
+	return &result.Inventory, handleResponse(resp, result)
+
 }

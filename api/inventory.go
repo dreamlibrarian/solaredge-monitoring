@@ -1,5 +1,9 @@
 package api
 
+type InventoryDocument struct {
+	Inventory Inventory `json:"Inventory"`
+}
+
 type Inventory struct {
 	Inverters           []Inverter  `json:"inverters"`
 	ThirdPartyInverters []Inverter  `json:"thirdPartyInverters"`

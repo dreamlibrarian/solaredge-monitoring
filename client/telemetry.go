@@ -8,7 +8,7 @@ import (
 )
 
 // Takes siteID and equipment SN.
-const equipmentDataEndpointTemplate = "site/%s/%s/data"
+const equipmentDataEndpointTemplate = "equipment/%s/%s/data"
 
 func (c *Client) GetTelemetryForEquipment(siteID, serialNumber string, timeUnit string, startTime, endTime time.Time) ([]api.Telemetry, error) {
 	var edd api.EquipmentDataDocument
