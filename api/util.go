@@ -21,12 +21,10 @@ func ToTimestamp(t time.Time) string {
 	return t.Format(TimeFormat)
 }
 
-func parseDate(stamp string) (*time.Time, error) {
-	val, err := time.Parse(DateFormat, stamp)
-	return &val, err
+func ParseDate(stamp string) (time.Time, error) {
+	return time.Parse(DateFormat, stamp)
 }
 
-func parseTime(stamp string) (*time.Time, error) {
-	val, err := time.Parse(TimeFormat, stamp)
-	return &val, err
+func ParseTime(stamp string) (time.Time, error) {
+	return time.Parse(TimeFormat, stamp)
 }

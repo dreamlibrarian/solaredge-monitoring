@@ -3,6 +3,7 @@ module github.com/dreamlibrarian/solaredge-monitoring
 go 1.17
 
 require (
+	github.com/aws/aws-lambda-go v1.27.1
 	github.com/hashicorp/go-multierror v1.1.0
 	github.com/rs/zerolog v1.26.0
 	github.com/spf13/cobra v1.2.1

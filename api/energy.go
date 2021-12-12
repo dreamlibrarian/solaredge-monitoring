@@ -30,12 +30,12 @@ func (v *Value) UnmarshalJSON(data []byte) error {
 		return fmt.Errorf("unable to parse '%s' as Value : %w", string(data), err)
 	}
 
-	timeStamp, err := parseTime(interimData.Date)
+	timeStamp, err := ParseTime(interimData.Date)
 	if err != nil {
 		return fmt.Errorf("unable to parse %s as date format %s: %w", interimData.Date, DateFormat, err)
 	}
 
-	*v = Value{Date: *timeStamp, Value: interimData.Value}
+	*v = Value{Date: timeStamp, Value: interimData.Value}
 
 	return nil
 }

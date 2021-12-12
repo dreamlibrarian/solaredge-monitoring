@@ -5,12 +5,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/dreamlibrarian/solaredge-monitoring/client"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
-var solaredgeClient *client.Client
+var apiKey string
 
 var RootCmd = &cobra.Command{
 	Use:   "solaredge-monitoring",
@@ -41,11 +40,10 @@ var RootCmd = &cobra.Command{
 			viper.Debug()
 		}
 
-		apiKey := viper.GetString("api-key")
+		apiKey = viper.GetString("api-key")
 		if apiKey == "" {
 			return errors.New("api-key must be specified")
 		}
-		solaredgeClient = client.NewClient(apiKey)
 
 		return nil
 	},

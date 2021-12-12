@@ -1,17 +1,15 @@
 package cmd
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
-	"strconv"
 	"time"
 
+	"github.com/dreamlibrarian/solaredge-monitoring/action"
 	"github.com/dreamlibrarian/solaredge-monitoring/api"
 	"github.com/hashicorp/go-multierror"
-	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -19,76 +17,39 @@ import (
 var energyCmd = &cobra.Command{
 	Use:   "get-energy",
 	Short: "Get energy readings for site",
-	RunE:  getEnergy,
-}
+	RunE: func(cmd *cobra.Command, args []string) error {
 
-func getEnergy(cmd *cobra.Command, args []string) error {
-
-	log.Debug().Msg("Getting Energy readings")
-
-	config, err := getEnergyConfig()
-	if err != nil {
-		return err
-	}
-
-	cmd.SilenceUsage = true
-
-	if config.DiscoverSites {
-		log.Debug().Msg("Getting sites from upstream.")
-		siteList, err := solaredgeClient.GetSiteList()
-		if err != nil {
-			return err
-		}
-		log.Debug().Interface("sites", siteList).Msg("got sites")
-		for _, site := range siteList {
-			config.SiteIDs = append(config.SiteIDs, strconv.FormatInt(site.ID, 10))
-		}
-	}
-
-	log.Debug().Interface("Config", config).Msg("Got config")
-
-	for _, siteID := range config.SiteIDs {
-		usage, err := solaredgeClient.GetEnergyUsage(siteID, config.TimeUnit, config.StartTime, config.EndTime)
+		config, err := getEnergyConfig()
 		if err != nil {
 			return err
 		}
 
-		usageJSON, err := json.Marshal(usage)
+		action := action.NewEnergyAction(apiKey)
+
+		eMap, err := action.Do(config)
 		if err != nil {
 			return err
 		}
 
-		filename := fmt.Sprintf("%s/%s_energy.json", config.OutputDir, siteID)
-		err = ioutil.WriteFile(filename, usageJSON, 0644)
-		if err != nil {
-			return fmt.Errorf("unable to write equipment file %s: %w", filename, err)
+		for path, content := range eMap {
+			err = ioutil.WriteFile(path, content, 0644)
+			if err != nil {
+				return err
+			}
 		}
-
-	}
-	return nil
+		return nil
+	},
 }
 
-type energyConfig struct {
-	StartTime time.Time
-	EndTime   time.Time
-	TimeUnit  string
-
-	SiteIDs []string
-
-	DiscoverSites bool
-
-	OutputDir string
-}
-
-func getEnergyConfig() (*energyConfig, error) {
-	config := energyConfig{}
+func getEnergyConfig() (*action.EnergyConfig, error) {
+	config := action.EnergyConfig{}
 	var err, errs error
 
 	startTime := viper.GetString("start-time")
 	if startTime == "" {
 		config.StartTime = time.Now().Add(-24 * time.Hour)
 	} else {
-		if config.StartTime, err = parseTime(startTime); err != nil {
+		if config.StartTime, err = api.ParseTime(startTime); err != nil {
 			errs = multierror.Append(errs, fmt.Errorf("start time could not be parsed: %w", err))
 		}
 	}
@@ -97,7 +58,7 @@ func getEnergyConfig() (*energyConfig, error) {
 	if endTime == "" {
 		config.EndTime = time.Now()
 	} else {
-		if config.EndTime, err = parseTime(endTime); err != nil {
+		if config.EndTime, err = api.ParseTime(endTime); err != nil {
 			errs = multierror.Append(errs, fmt.Errorf("start time could not be parsed: %w", err))
 		}
 	}
@@ -124,20 +85,8 @@ func getEnergyConfig() (*energyConfig, error) {
 		errs = multierror.Append(errs, errors.New("may only set one of by-day, by-hour, by-quarter-hour"))
 	}
 
-	discoverSites := viper.GetBool("all-sites")
-	siteIDs := viper.GetStringSlice("site-id")
-	if discoverSites {
-		if len(siteIDs) > 0 {
-			errs = multierror.Append(errs, errors.New("cannot set all-sites and specify site-ids"))
-		} else {
-			config.DiscoverSites = true
-		}
-	} else {
-		if len(siteIDs) == 0 {
-			errs = multierror.Append(errs, errors.New("must set all-sites or specify at least one site-id"))
-		}
-		config.SiteIDs = siteIDs
-	}
+	config.DiscoverSites = viper.GetBool("all-sites")
+	config.SiteIDs = viper.GetStringSlice("site-id")
 
 	outputDir := viper.GetString("output-dir")
 	outputDirStat, err := os.Stat(outputDir)
