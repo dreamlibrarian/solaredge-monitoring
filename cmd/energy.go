@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -31,8 +32,24 @@ var energyCmd = &cobra.Command{
 			return err
 		}
 
+		outputDir := viper.GetString("output-dir")
+		outputDirStat, err := os.Stat(outputDir)
+		if os.IsNotExist(err) {
+			err = os.Mkdir(outputDir, 0755)
+			if err != nil {
+				return fmt.Errorf("unable to create output directory %s: %w", outputDir, err)
+			}
+		} else if !outputDirStat.IsDir() {
+			return fmt.Errorf("path %s must refer to a directory", outputDir)
+		}
+
 		for path, content := range eMap {
-			err = ioutil.WriteFile(path, content, 0644)
+			outputPath := fmt.Sprintf("%s/%s", outputDir, path)
+			data, err := json.Marshal(content)
+			if err != nil {
+				return err
+			}
+			err = ioutil.WriteFile(outputPath, data, 0644)
 			if err != nil {
 				return err
 			}
@@ -87,18 +104,6 @@ func getEnergyConfig() (*action.EnergyConfig, error) {
 
 	config.DiscoverSites = viper.GetBool("all-sites")
 	config.SiteIDs = viper.GetStringSlice("site-id")
-
-	outputDir := viper.GetString("output-dir")
-	outputDirStat, err := os.Stat(outputDir)
-	if os.IsNotExist(err) {
-		err = os.Mkdir(outputDir, 0755)
-		if err != nil {
-			errs = multierror.Append(errs, fmt.Errorf("unable to create output directory %s: %w", outputDir, err))
-		}
-	} else if !outputDirStat.IsDir() {
-		errs = multierror.Append(errs, fmt.Errorf("path %s must refer to a directory", outputDir))
-	}
-	config.OutputDir = outputDir
 
 	return &config, errs
 }

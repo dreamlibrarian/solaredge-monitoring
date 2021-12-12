@@ -1,12 +1,12 @@
 package action
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"strconv"
 	"time"
 
+	"github.com/dreamlibrarian/solaredge-monitoring/api"
 	"github.com/dreamlibrarian/solaredge-monitoring/client"
 	"github.com/rs/zerolog/log"
 )
@@ -25,8 +25,6 @@ type TelemetryActionConfig struct {
 
 	DiscoverSites   bool
 	DiscoverSerials bool
-
-	OutputDir string
 }
 
 func NewTelemetryAction(key string) *TelemetryAction {
@@ -37,11 +35,9 @@ func NewTelemetryAction(key string) *TelemetryAction {
 	}
 }
 
-// FIXME: Do should return raw objects so I can decide how to format them, and
-// maybe do other villainy. this bytestream thing is just bad abstraction.
-func (t *TelemetryAction) Do(config *TelemetryActionConfig) (map[string][]byte, error) {
+func (t *TelemetryAction) Do(config *TelemetryActionConfig) (map[string]map[string][]api.Telemetry, error) {
 
-	fileNameContentsMap := make(map[string][]byte)
+	siteIDSerialInventoryMap := make(map[string]map[string][]api.Telemetry)
 
 	log.Debug().Msg("Getting Telemetry")
 
@@ -71,6 +67,8 @@ func (t *TelemetryAction) Do(config *TelemetryActionConfig) (map[string][]byte, 
 
 	for _, siteID := range config.SiteIDs {
 		var serialNumbers []string
+
+		siteIDSerialInventoryMap[siteID] = make(map[string][]api.Telemetry)
 
 		if config.DiscoverSerials {
 			inventory, err := t.client.GetSiteInventory(siteID)
@@ -106,19 +104,12 @@ func (t *TelemetryAction) Do(config *TelemetryActionConfig) (map[string][]byte, 
 				return nil, err
 			}
 
-			equipmentJSON, err := json.Marshal(equipment)
-			if err != nil {
-				return nil, fmt.Errorf("unable to generate json for equipment serial %s at site %s: %w", serial, siteID, err)
-			}
-
-			filename := fmt.Sprintf("%s/%s_%s.json", config.OutputDir, siteID, serial)
-
-			fileNameContentsMap[filename] = equipmentJSON
+			siteIDSerialInventoryMap[siteID][serial] = equipment
 
 			log.Debug().Interface("equipment", equipment).Msg("Got equipment telemetry")
 		}
 
 	}
 
-	return fileNameContentsMap, nil
+	return siteIDSerialInventoryMap, nil
 }

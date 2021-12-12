@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -32,7 +33,11 @@ var telemetryCmd = &cobra.Command{
 		}
 
 		for path, contents := range fsMap {
-			err = ioutil.WriteFile(path, contents, 0644)
+			data, err := json.Marshal(contents)
+			if err != nil {
+				return err
+			}
+			err = ioutil.WriteFile(path, data, 0644)
 			if err != nil {
 				return err
 			}
@@ -125,7 +130,6 @@ func getTelemetryConfig() (*action.TelemetryActionConfig, error) {
 	} else if !outputDirStat.IsDir() {
 		errs = multierror.Append(errs, fmt.Errorf("path %s must refer to a directory", outputDir))
 	}
-	config.OutputDir = outputDir
 
 	return &config, errs
 }

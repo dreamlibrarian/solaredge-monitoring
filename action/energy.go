@@ -1,11 +1,11 @@
 package action
 
 import (
-	"encoding/json"
 	"errors"
 	"strconv"
 	"time"
 
+	"github.com/dreamlibrarian/solaredge-monitoring/api"
 	"github.com/dreamlibrarian/solaredge-monitoring/client"
 	"github.com/rs/zerolog/log"
 )
@@ -21,8 +21,6 @@ type EnergyConfig struct {
 
 	DiscoverSites bool
 	SiteIDs       []string
-
-	OutputDir string
 }
 
 func NewEnergyAction(key string) *EnergyAction {
@@ -33,11 +31,9 @@ func NewEnergyAction(key string) *EnergyAction {
 	}
 }
 
-// FIXME: Do should return raw objects so I can decide how to format them, and
-// maybe do other villainy. this bytestream thing is just bad abstraction.
-func (a *EnergyAction) Do(config *EnergyConfig) (map[string][]byte, error) {
+func (a *EnergyAction) Do(config *EnergyConfig) (map[string]*api.Energy, error) {
 
-	siteIDContentMap := make(map[string][]byte)
+	siteIDContentMap := make(map[string]*api.Energy)
 
 	log.Debug().Msg("Getting Energy readings")
 	if config.DiscoverSites {
@@ -63,13 +59,7 @@ func (a *EnergyAction) Do(config *EnergyConfig) (map[string][]byte, error) {
 			return nil, err
 		}
 
-		usageJSON, err := json.Marshal(usage)
-		if err != nil {
-			return nil, err
-		}
-
-		siteIDContentMap[siteID] = usageJSON
-
+		siteIDContentMap[siteID] = usage
 	}
 	return siteIDContentMap, nil
 }
