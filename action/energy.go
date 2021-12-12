@@ -33,6 +33,8 @@ func NewEnergyAction(key string) *EnergyAction {
 	}
 }
 
+// FIXME: Do should return raw objects so I can decide how to format them, and
+// maybe do other villainy. this bytestream thing is just bad abstraction.
 func (a *EnergyAction) Do(config *EnergyConfig) (map[string][]byte, error) {
 
 	siteIDContentMap := make(map[string][]byte)
