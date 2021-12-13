@@ -1,0 +1,14 @@
+products:
+  solaredge-monitoring:
+    build:
+      output-dir: build
+      main-pkg: .
+      os-archs:
+        - os: linux
+          arch: amd64
+  solaredge-monitoring-lambda:
+    build:
+      main-pkg: lambda
+      os-archs:
+        - os: linux
+          arch: amd64

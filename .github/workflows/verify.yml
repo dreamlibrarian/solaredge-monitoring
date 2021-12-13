@@ -1,9 +1,6 @@
-name: "godel test"
+name: "godel verify"
 on:
   pull_request:
-  release:
-    types:
-      - created
 jobs:
   test:
     runs-on: ubuntu-20.04
@@ -18,4 +15,4 @@ jobs:
           key: ${{ runner.OS }}-godel-cache-${{ hashfiles('**/latest-version.json') }}
           restore-keys: |
             ${{ runner.os }}-godel-cache
-      - run: ./godelw test
+      - run: ./godelw verify --apply=false
