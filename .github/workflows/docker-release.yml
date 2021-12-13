@@ -1,0 +1,37 @@
+name: docker-release
+on:
+  release:
+    types:
+      - created
+jobs:
+  build-docker:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '~1.17.1'
+      - uses: actions/cache@v1
+        with:
+          path: ~/.godel
+          key: ${{ runner.OS }}-godel-cache-${{ hashfiles('**/latest-version.json') }}
+          restore-keys: |
+            ${{ runner.os }}-godel-cache
+      - run: ./godelw test
+      - run: ./godelw build solaredge-monitoring-lambda
+      - run: mv $(./godelw artifacts build solaredge-monitoring-lambda) .
+      - name: upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: solaredge-monitoring-lambda
+          path: ./solaredge-monitoring-lambda
+      - name: Build and Push
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          build-args: |
+            lambda_bin=solaredge-monitoring-lambda
+          tags: dreamlibrarian/solaredge-monitoring-lambda:latest
+          secrets: |
+            GIT_AUTH_TOKEN=${{ secrets.MYTOKEN }}
+
