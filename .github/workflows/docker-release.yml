@@ -20,6 +20,11 @@ jobs:
       - run: ./godelw test
       - run: ./godelw build solaredge-monitoring-lambda
       - run: mv $(./godelw artifacts build solaredge-monitoring-lambda) .
+      - name: upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: solaredge-monitoring-lambda
+          path: ./solaredge-monitoring-lambda
       - name: Build and Push
         uses: docker/build-push-action@v2
         with:
