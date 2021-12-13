@@ -1,0 +1,18 @@
+name: "godel test"
+on:
+  pull_request:
+  release:
+    types:
+      - created
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path:  ~/.godel
+          key: ${{ runner.OS }}-godel-cache-${{ hashfiles('**/latest-version.json') }}
+          restore-keys: |
+            ${{ runner.os }}-godel-cache
+      - run: ./godelw test
