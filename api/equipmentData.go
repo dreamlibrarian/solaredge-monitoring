@@ -16,16 +16,16 @@ type EquipmentData struct {
 }
 
 type Telemetry struct {
-	Date                  *time.Time `json:"date"`
-	TotalActivePower      float64    `json:"totalActivePower"`
-	DCVoltage             float64    `json:"dcVoltage"`
-	GroundFaultResistance float64    `json:"groundFaultResistance"`
-	PowerLimit            float64    `json:"powerLimit"`
-	TotalEnergy           float64    `json:"totalEnergy"`
-	Temperature           float64    `json:"temperature"`
-	InverterMode          string     `json:"inverterMode"`
-	OperationMode         float64    `json:"operationMode"`
-	L1Data                L1Data     `json:"L1Data"`
+	Date                  time.Time `json:"date"`
+	TotalActivePower      float64   `json:"totalActivePower"`
+	DCVoltage             float64   `json:"dcVoltage"`
+	GroundFaultResistance float64   `json:"groundFaultResistance"`
+	PowerLimit            float64   `json:"powerLimit"`
+	TotalEnergy           float64   `json:"totalEnergy"`
+	Temperature           float64   `json:"temperature"`
+	InverterMode          string    `json:"inverterMode"`
+	OperationMode         float64   `json:"operationMode"`
+	L1Data                L1Data    `json:"L1Data"`
 }
 
 func (t *Telemetry) UnmarshalJSON(data []byte) error {
@@ -43,7 +43,7 @@ func (t *Telemetry) UnmarshalJSON(data []byte) error {
 
 	*t = Telemetry(interimTelemetry.TelemetryAlias)
 
-	t.Date, err = parseTime(interimTelemetry.Date)
+	t.Date, err = ParseTime(interimTelemetry.Date)
 	if err != nil {
 		return fmt.Errorf("unable to parse date %s to time.Time: %w", interimTelemetry.Date, err)
 	}

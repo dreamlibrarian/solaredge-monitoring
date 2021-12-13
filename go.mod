@@ -3,6 +3,8 @@ module github.com/dreamlibrarian/solaredge-monitoring
 go 1.17
 
 require (
+	github.com/aws/aws-lambda-go v1.27.1
+	github.com/aws/aws-sdk-go v1.42.22
 	github.com/hashicorp/go-multierror v1.1.0
 	github.com/rs/zerolog v1.26.0
 	github.com/spf13/cobra v1.2.1
@@ -16,6 +18,7 @@ require (
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
+	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/mitchellh/mapstructure v1.4.2 // indirect
 	github.com/pelletier/go-toml v1.9.4 // indirect

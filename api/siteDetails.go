@@ -23,9 +23,9 @@ type SiteDetails struct {
 	AccountID        int64             `json:"accountId"`
 	Status           string            `json:"status"`
 	PeakPower        float64           `json:"peakPower"`
-	LastUpdateTime   *time.Time        `json:"lastUpdateTime"`
-	InstallationDate *time.Time        `json:"installationDate"`
-	PTODate          *time.Time        `json:"ptoDate"`
+	LastUpdateTime   time.Time         `json:"lastUpdateTime"`
+	InstallationDate time.Time         `json:"installationDate"`
+	PTODate          time.Time         `json:"ptoDate"`
 	Notes            string            `json:"notes"`
 	Type             string            `json:"type"`
 	Location         Location          `json:"location"`
@@ -38,9 +38,9 @@ func (s *SiteDetails) UnmarshalJSON(data []byte) error {
 	type SiteDetailsAlias SiteDetails
 	interimData := struct {
 		SiteDetailsAlias
-		LastUpdateTime   *string `json:"lastUpdateTime"`
-		InstallationDate *string `json:"installationDate"`
-		PTODate          *string `json:"ptoDate"`
+		LastUpdateTime   string `json:"lastUpdateTime"`
+		InstallationDate string `json:"installationDate"`
+		PTODate          string `json:"ptoDate"`
 	}{}
 	err := json.Unmarshal(data, &interimData)
 	if err != nil {
@@ -49,24 +49,24 @@ func (s *SiteDetails) UnmarshalJSON(data []byte) error {
 
 	*s = SiteDetails(interimData.SiteDetailsAlias)
 
-	if interimData.LastUpdateTime != nil {
-		s.LastUpdateTime, err = parseDate(*interimData.LastUpdateTime)
+	if interimData.LastUpdateTime != "" {
+		s.LastUpdateTime, err = ParseDate(interimData.LastUpdateTime)
 		if err != nil {
-			return fmt.Errorf("unable to parse lastUpdateTime %s with format %s: %w", *interimData.LastUpdateTime, TimeFormat, err)
+			return fmt.Errorf("unable to parse lastUpdateTime %s with format %s: %w", interimData.LastUpdateTime, TimeFormat, err)
 		}
 	}
 
-	if interimData.InstallationDate != nil {
-		s.InstallationDate, err = parseDate(*interimData.InstallationDate)
+	if interimData.InstallationDate != "" {
+		s.InstallationDate, err = ParseDate(interimData.InstallationDate)
 		if err != nil {
-			return fmt.Errorf("unable to parse installationDate %s with format %s: %w", *interimData.InstallationDate, TimeFormat, err)
+			return fmt.Errorf("unable to parse installationDate %s with format %s: %w", interimData.InstallationDate, TimeFormat, err)
 		}
 	}
 
-	if interimData.PTODate != nil {
-		s.PTODate, err = parseTime(*interimData.PTODate)
+	if interimData.PTODate != "" {
+		s.PTODate, err = ParseTime(interimData.PTODate)
 		if err != nil {
-			return fmt.Errorf("unable to parse PTODate %s with format %s: %w", *interimData.PTODate, TimeFormat, err)
+			return fmt.Errorf("unable to parse PTODate %s with format %s: %w", interimData.PTODate, TimeFormat, err)
 		}
 	}
 
